@@ -1,0 +1,20 @@
+meta {
+  name: searchProduct
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://dummyjson.com/products/search?q=phone
+  body: none
+  auth: inherit
+}
+
+params:query {
+  q: phone
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
