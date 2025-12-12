@@ -6,7 +6,6 @@ export interface Product {
     price: number;
     rating: number;
     stock: number;
-    tags: string[];
     brand: string;
     reviews: {
         rating: number;
@@ -22,7 +21,6 @@ export interface CreateProductDTO {
     category: string;
     price: number;
     stock: number;
-    tags: string[];
     brand: string;
     images: string[];
 }
@@ -33,7 +31,6 @@ export interface UpdateProductDTO {
     category?: string;
     price?: number;
     stock?: number;
-    tags?: string[];
     brand?: string;
     images?: string[];
 }
