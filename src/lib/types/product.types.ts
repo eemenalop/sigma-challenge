@@ -7,11 +7,6 @@ export interface Product {
     rating: number;
     stock: number;
     brand: string;
-    reviews: {
-        rating: number;
-        comment: string;
-        date: string;
-    }[];
     images: string[];
 }
 
