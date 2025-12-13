@@ -57,7 +57,7 @@ function transformDUMMYJSON(apiProduct: DUMMYJSONProduct): Product {
             throw new Error('reference is required and cannot be empty');
         }
 
-        const response = await fetch(`${DUMMYJSON_PRODUCTS_URL}/search?q=${reference}`);
+        const response = await fetch(`${DUMMYJSON_PRODUCTS_URL}/search?q=${encodeURIComponent(reference)}`);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status} cannot search products by reference`);
