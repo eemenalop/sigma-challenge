@@ -2,6 +2,7 @@
 
 import { Product } from '@/lib/types/product.types';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface ProductCardProps {
   product: Product;
@@ -21,20 +22,31 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   const stockStatus = getStockStatus(product.stock);
-
+  const imageUrl = product.images && product.images.length > 0 ? product.images[0] : null;
+  
   return (
     <div
       onClick={handleClick}
       className="cursor-pointer group"
     >
       {/* Image Container */}
-      <div className="aspect-[14/13] w-full rounded-2xl overflow-hidden bg-gray-800 mb-6">
-        <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center group-hover:from-gray-600 group-hover:to-gray-800 transition-colors">
-          <span className="text-gray-500">No image</span>
-        </div>
+      <div className="aspect-[14/13] w-full rounded-2xl overflow-hidden bg-gray-800 mb-6 relative">
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={product.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center group-hover:from-gray-600 group-hover:to-gray-800 transition-colors">
+            <span className="text-gray-500">No image</span>
+          </div>
+        )}
       </div>
 
-      {/* Product Info */}
+      {/* Title */}
       <h3 className="text-lg font-semibold tracking-tight text-white line-clamp-2 mb-2 group-hover:text-indigo-400 transition-colors">
         {product.title}
       </h3>
@@ -44,7 +56,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         ${product.price.toFixed(2)}
       </p>
 
-      {/* Stock Status */}
+      {/* Stock */}
       <p className={`text-sm ${stockStatus.color} mb-2`}>
         {stockStatus.text}
       </p>
