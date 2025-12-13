@@ -31,7 +31,7 @@ function transformDUMMYJSON(apiProduct: DUMMYJSONProduct): Product {
     //get all products
     export async function getAllProducts(): Promise<Product[]> {
         if(productStorage.getAllProducts().length === 0){
-            const response = await fetch(DUMMYJSON_PRODUCTS_URL);
+            const response = await fetch(`${DUMMYJSON_PRODUCTS_URL}?limit=0&skip=0`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status} cannot fetch products`);
             }
