@@ -4,15 +4,15 @@ import { getProductsByCategoryPaginated } from '@/lib/services/paginationService
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ category: string }> }
+  { params }: { params: Promise<{ categoryName: string }> }
 ) {
   try {
-    const { category } = await params;
+    const { categoryName } = await params;
     const searchParams = request.nextUrl.searchParams;
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
 
-    if (!category || category.trim() === '') {
+    if (!categoryName || categoryName.trim() === '') {
       return NextResponse.json(
         errorResponse('Category is required'),
         { status: 400 }
@@ -26,7 +26,7 @@ export async function GET(
       );
     }
 
-    const { products, totalPages, totalItems } = await getProductsByCategoryPaginated(category, page, limit);
+    const { products, totalPages, totalItems } = await getProductsByCategoryPaginated(categoryName, page, limit);
     
     return NextResponse.json({
       success: true,
