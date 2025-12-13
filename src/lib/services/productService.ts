@@ -26,7 +26,7 @@ function transformDUMMYJSON(apiProduct: DUMMYJSONProduct): Product {
         brand: apiProduct.brand,
         images: apiProduct.images,
     }
-}   
+}
     //get all products
     export async function getAllProducts(): Promise<Product[]> {
         const response = await fetch(DUMMYJSON_PRODUCTS_URL);
@@ -178,4 +178,3 @@ function transformDUMMYJSON(apiProduct: DUMMYJSONProduct): Product {
     const categories: string[] = await response.json();
     return categories;
   }
-
