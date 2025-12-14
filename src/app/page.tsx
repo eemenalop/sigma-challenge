@@ -7,6 +7,7 @@ import SearchBar from './components/SearchBar';
 import ProductGrid from './components/ProductGrid';
 import Pagination from './components/Pagination';
 import { useRouter } from 'next/navigation';
+import Button from './components/Button';
 
 interface PaginationData {
   currentPage: number;
@@ -107,12 +108,13 @@ export default function HomePage() {
         {/* Search and Create Button */}
         <div className="mt-10 flex gap-4">
           <SearchBar value={searchQuery} onChange={handleSearch} />
-          <button
+          <Button
             onClick={handleCreateProduct}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold whitespace-nowrap"
+            variant="primary"
+            size="md"
           >
             Create Product
-          </button>
+        </Button>
         </div>
 
         {/* Category Tabs */}
