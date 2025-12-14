@@ -95,4 +95,4 @@ src/
 
 - Los datos se persisten en `data/products.json`
 - La primera vez se cargan automáticamente desde DummyJSON API
-- El archivo `data/products.json` está excluido de Git
+- El archivo `data/products.json` está excluido de Git para que la data sea unica y nueva.
