@@ -40,15 +40,32 @@ export async function GET(request: NextRequest) {
 
 //Create a new product
 export async function POST(request: NextRequest){
-    try {
-        const body = await request.json();
-        const errors = validateCreateProduct(body);
-        if(errors.length > 0){
-            return NextResponse.json(errorResponse('Validation errors', errors), { status: 400 });
-        }
-        const newProduct = await createProduct(body);
-        return NextResponse.json(successResponse(newProduct), { status: 201 });
-    }catch(error){
-        return NextResponse.json(errorResponse('Failed to create product'), { status: 500 });
-    }
+  try {
+      const body = await request.json();
+      const errors = validateCreateProduct(body);
+      if(errors.length > 0){
+          return NextResponse.json(errorResponse('Validation errors', errors), { status: 400 });
+      }
+      const newProduct = await createProduct(body);
+      
+      const orderedProduct = {
+          id: newProduct.id,
+          title: newProduct.title,
+          description: newProduct.description,
+          category: newProduct.category,
+          price: newProduct.price,
+          rating: newProduct.rating,
+          stock: newProduct.stock,
+          brand: newProduct.brand,
+          images: newProduct.images,
+      };
+      
+      return NextResponse.json({
+          success: true,
+          data: orderedProduct
+      }, { status: 201 });
+  }catch(error){
+      console.error('POST error:', error);
+      return NextResponse.json(errorResponse('Failed to create product'), { status: 500 });
+  }
 }
