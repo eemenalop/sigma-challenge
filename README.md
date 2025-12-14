@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sigma Challenge - Product Management
 
-## Getting Started
+Sistema de gestión de productos desarrollado con Next.js 15, TypeScript y Tailwind CSS.
 
-First, run the development server:
+## Requisitos Previos
+
+- Node.js 20 o superior
+- npm
+- Docker (opcional)
+
+## Instalación y Ejecución
+
+### Clonar el Repositorio
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/eemenalop/sigma-challenge.git
+cd sigma-challenge
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Modo Desarrollo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Instalar dependencias:
+```bash
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Iniciar el servidor de desarrollo:
+```bash
+npm run dev
+```
 
-## Learn More
+3. Abrir en el navegador: [http://localhost:3000](http://localhost:3000)
 
-To learn more about Next.js, take a look at the following resources:
+### Con Docker
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Construir la imagen:
+```bash
+docker build -t sigma-challenge .
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Ejecutar el contenedor:
+```bash
+docker run -p 3000:3000 sigma-challenge
+```
 
-## Deploy on Vercel
+3. Abrir en el navegador: [http://localhost:3000](http://localhost:3000)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Funcionalidades
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Listar productos con paginación
+- Buscar productos
+- Filtrar por categorías
+- Crear productos
+- Actualizar productos
+- Eliminar productos
+- Persistencia de datos en archivo JSON
+
+## Estructura del Proyecto
+
+```
+src/
+├── app/
+│   ├── api/              # API Routes
+│   ├── components/       # Componentes React
+│   ├── contexts/         # Context API
+│   └── products/         # Páginas de productos
+├── lib/
+│   ├── services/         # Lógica de negocio
+│   ├── validators/       # Validaciones
+│   ├── types/            # TypeScript types
+│   ├── utils/            # Utilidades
+│   └── storage/          # Almacenamiento en memoria
+```
+
+## Tecnologías Utilizadas
+
+- Next.js 15
+- TypeScript
+- Tailwind CSS
+- Headless UI
+- Heroicons
+
+## API Endpoints
+
+- `GET /api/products` - Listar productos
+- `POST /api/products` - Crear producto
+- `PATCH /api/products/:id` - Actualizar producto
+- `DELETE /api/products/:id` - Eliminar producto
+- `GET /api/products/:id` - Obtener producto por ID
+- `GET /api/products/search` - Buscar productos
+- `GET /api/products/categories` - Listar categorías
+- `GET /api/products/category/:name` - Productos por categoría
+
+## Notas
+
+- Los datos se persisten en `data/products.json`
+- La primera vez se cargan automáticamente desde DummyJSON API
+- El archivo `data/products.json` está excluido de Git
