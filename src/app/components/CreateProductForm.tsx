@@ -1,4 +1,3 @@
-// src/app/components/CreateProductForm.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Button from './Button';
 import { validateCreateProduct } from '@/lib/validators/productValidator';
 import { CreateProductDTO } from '@/lib/types/product.types';
+import { useNotification } from '../contexts/NotificationContext';
 
 interface ValidationError {
   [key: string]: string;
@@ -13,8 +13,8 @@ interface ValidationError {
 
 export default function CreateProductForm() {
   const router = useRouter();
+  const { showNotification } = useNotification();
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
   const [validationErrors, setValidationErrors] = useState<ValidationError>({});
   const [categories, setCategories] = useState<string[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
@@ -85,11 +85,9 @@ export default function CreateProductForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form submitted with data:', formData);
     
     // Validate form data
     const errors = validateCreateProduct(formData);
-    console.log('Validation errors:', errors);
     if (errors.length > 0) {
       const errorMap: ValidationError = {};
       errors.forEach(error => {
@@ -101,7 +99,6 @@ export default function CreateProductForm() {
         }
       });
       setValidationErrors(errorMap);
-      console.log('Setting validation errors:', errorMap);
       return;
     }
 
@@ -109,7 +106,6 @@ export default function CreateProductForm() {
     setValidationErrors({});
     
     try {
-      console.log('Sending POST request with:', formData);
       const response = await fetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -117,8 +113,6 @@ export default function CreateProductForm() {
       });
 
       const data = await response.json();
-      console.log('Response status:', response.status);
-      console.log('Response data:', data);
 
       if (!response.ok) {
         if (data.details) {
@@ -133,18 +127,15 @@ export default function CreateProductForm() {
         } else {
           setValidationErrors({ form: data.error || 'Error creating product' });
         }
-        console.log('Request failed with errors:', data);
         return;
       }
 
-      console.log('Product created successfully!');
-      setSuccessMessage('Product created successfully!');
+      showNotification('success', 'Product created successfully!', 'Redirecting to home...');
       setTimeout(() => {
-        console.log('Redirecting to home...');
         router.push('/');
-      }, 2000);
+      }, 1500);
     } catch (error) {
-      console.error('Fetch error:', error);
+      showNotification('error', 'Error creating product', 'Please try again later.');
       setValidationErrors({ form: 'Error creating product. Please try again.' });
     } finally {
       setIsLoading(false);
@@ -153,13 +144,6 @@ export default function CreateProductForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {/* Success Message */}
-      {successMessage && (
-        <div className="p-4 bg-green-900/20 border border-green-500/50 text-green-400 rounded-lg">
-          {successMessage}
-        </div>
-      )}
-
       {/* General Errors */}
       {validationErrors.form && (
         <div className="p-4 bg-red-900/20 border border-red-500/50 text-red-400 rounded-lg">
