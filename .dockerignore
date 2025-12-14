@@ -1,0 +1,49 @@
+# dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# next.js
+.next/
+out/
+
+# production
+build/
+dist/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# project specific
+sigma-challenge.md
+.cursorrules
+TECHNICAL_DECISIONS.md
+DESIGN_PLAN.md
+bruno-sigma-challenge/
+
+# data (will be created in container)
+data/
