@@ -40,7 +40,7 @@ docker build -t sigma-challenge .
 
 2. Ejecutar el contenedor:
 ```bash
-docker run -p 3000:3000 sigma-challenge
+docker run --name sigma-challenge-app -p 3000:3000 sigma-challenge
 ```
 
 3. Abrir en el navegador: [http://localhost:3000](http://localhost:3000)
