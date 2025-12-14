@@ -1,0 +1,24 @@
+meta {
+  name: updateProduct
+  type: http
+  seq: 7
+}
+
+patch {
+  url: http://localhost:3000/api/products/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Updated Product Name",
+    "price": 149.99,
+    "stock": 100
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
