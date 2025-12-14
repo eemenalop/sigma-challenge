@@ -30,21 +30,31 @@ function transformDUMMYJSON(apiProduct: DUMMYJSONProduct): Product {
 }
     //get all products
     export async function getAllProducts(): Promise<Product[]> {
-        if(productStorage.getAllProducts().length === 0){
-            const response = await fetch(`${DUMMYJSON_PRODUCTS_URL}?limit=0&skip=0`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status} cannot fetch products`);
-            }
-            const data = await response.json();
-            const products = data.products.map(transformDUMMYJSON);
-            products.forEach((p: Product) => productStorage.addProduct(p));
+        const storageProducts = await productStorage.getAllProducts();
+        
+        if(storageProducts.length > 0){
+            return storageProducts;
         }
-        return productStorage.getAllProducts();
+        
+        // Primera vez: fetch de DummyJSON
+        const response = await fetch(`${DUMMYJSON_PRODUCTS_URL}?limit=0&skip=0`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status} cannot fetch products`);
+        }
+        const data = await response.json();
+        const products = data.products.map(transformDUMMYJSON);
+        
+        // Guardar todos los productos en storage (y en archivo)
+        for (const p of products) {
+            await productStorage.addProduct(p);
+        }
+        
+        return await productStorage.getAllProducts();
     }
 
     //get product by id
     export async function getProductById(id: number): Promise<Product | null>{
-        let product = productStorage.getProductById(id);
+        const product = await productStorage.getProductById(id);
         if(product) return product;
         
         // If not in storage, fetch from DummyJSON
@@ -58,7 +68,7 @@ function transformDUMMYJSON(apiProduct: DUMMYJSONProduct): Product {
     
         const data = await response.json();
         const transformed = transformDUMMYJSON(data);
-        productStorage.addProduct(transformed);
+        await productStorage.addProduct(transformed);
         return transformed;
     }
 
@@ -67,68 +77,29 @@ function transformDUMMYJSON(apiProduct: DUMMYJSONProduct): Product {
         if(!reference || reference.trim() === ''){
             throw new Error('reference is required and cannot be empty');
         }
-        const response = await fetch(`${DUMMYJSON_PRODUCTS_URL}/search?q=${encodeURIComponent(reference)}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status} cannot search products by reference`);
-        }
-    
-        const data = await response.json();
-        const dummyResults = data.products.map(transformDUMMYJSON);
         
-        const allStorageProducts = productStorage.getAllProducts();
-        const storageResults = allStorageProducts.filter(p =>
+        const allProducts = await productStorage.getAllProducts();
+        return allProducts.filter(p =>
             p.title.toLowerCase().includes(reference.toLowerCase()) ||
             p.description.toLowerCase().includes(reference.toLowerCase())
         );
-
-        //remove duplicates
-        const combined = [...dummyResults];
-        storageResults.forEach(p => {
-            if(!combined.find(item => item.id === p.id)) {
-                combined.push(p);
-            }
-        });
-    
-        return combined;
     }
 
     //get products by category
     export async function getProductsByCategory(category: string): Promise<Product[]> {
-    if(!category || category.trim() === ''){
-        throw new Error('category is required and cannot be empty');
-    }
-
-    const response = await fetch(`${DUMMYJSON_PRODUCTS_URL}/category/${encodeURIComponent(category)}`);
+        if(!category || category.trim() === ''){
+            throw new Error('category is required and cannot be empty');
+        }
     
-    let dummyResults: Product[] = [];
-    if(response.status !== 404){
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status} cannot fetch products by category`);
-        }
-        const data = await response.json();
-        dummyResults = data.products.map(transformDUMMYJSON);
-    }
-
-    const allStorageProducts = productStorage.getAllProducts();
-    const storageResults = allStorageProducts.filter(p => 
-        p.category.toLowerCase() === category.toLowerCase()
-    );
-
-    //remove duplicates
-    const combined = [...dummyResults];
-    storageResults.forEach(p => {
-        if(!combined.find(item => item.id === p.id)) {
-            combined.push(p);
-        }
-    });
-
-    return combined;
+        const allProducts = await productStorage.getAllProducts();
+        return allProducts.filter(p => 
+            p.category.toLowerCase() === category.toLowerCase()
+        );
 }
 
     //create product
     export async function createProduct(data: CreateProductDTO): Promise<Product> {
-        const newProduct: Product = {
-            id: 1000 + Math.random() * 9000,
+        const newProduct: Omit<Product, 'id'> = {
             title: data.title,
             description: data.description,
             category: data.category,
@@ -139,20 +110,19 @@ function transformDUMMYJSON(apiProduct: DUMMYJSONProduct): Product {
             images: data.images,
         };
         
-        productStorage.addProduct(newProduct);
-        return newProduct;
+        return await productStorage.addProduct(newProduct);
     }
     //update product
     export async function updateProduct(
         id: number,
         data: UpdateProductDTO
     ): Promise<Product | null> {
-        const updated = productStorage.updateProduct(id, data);
+        const updated = await productStorage.updateProduct(id, data);
         return updated;
     }
     //delete product
     export async function deleteProduct(id: number): Promise<boolean> {
-        const deleted = productStorage.deleteProduct(id);
+        const deleted = await productStorage.deleteProduct(id);
         return deleted;
     }
 
