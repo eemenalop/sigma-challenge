@@ -23,7 +23,7 @@ export default function Pagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-between border-t border-white/10 px-4 py-3 sm:px-6">
+    <div className="flex items-center justify-between border-t border-white/10 px-4 py-6 sm:px-6 mt-10">
       {/* Mobile view */}
       <div className="flex flex-1 justify-between sm:hidden">
         <button
